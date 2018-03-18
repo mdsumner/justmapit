@@ -1,0 +1,49 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# justmapit
+
+Not functional yet. Don't use. 
+
+
+Working with projections in R is a massive pain in the arse because
+the graphics device/s don't have any consistent mechanism for recording (or even specifying) the metadata used for the coordinate system in use. Even when you know what you're doing you have to keep track of a lot of stuff and engineer everything just right, but the objects have this metadata!  There is some aggressive resistance to things being easy, and there's been some private communications that have scared off a few very capable devs from pushing the tools forward. I couldn't care less about those concerned old grumps, it's time to ignore them and stop holding everything back. 
+
+The goal of justmapit is to explore means of recording this information.  I'm so tired of having to juggle different ways of transforming stuff, and base graphics is perfectly suitable for this. Some packages do store metadata for later use, but I think `fields` and `oce` are the only examples. `ggplot2` does do some, but it's not consistent across various packages that use the projection metadata. 
+
+I think this would be relatively simple if
+
+* sf, sp and raster recorded the CRS last-used in a global option
+
+That might be enough, and this package will disappear.  I'm not sure if we can wrap those packages so that their use triggers a CRS record? Otherwise we just continue working around them, or replace them.  Writing an aggressive, masking plot() wrapper could also work, I'm not sure I can ever change my "plot(add = )" habits. 
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+
+data("gebco1", package = "anglr")
+data("simpleworld", package = "anglr")
+
+
+library(justmapit)
+jmi(gebco1)
+jmi(simpleworld, add = T)
+
+
+jmi(projectRaster(gebco1, crs = "+proj=laea"))
+jmi(simpleworld, add = T)
+
+```
+
